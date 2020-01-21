@@ -1,4 +1,5 @@
 module.exports = [
+    require('./bandcamp'),
     require('./card-markdown'),
     require('./code'),
     require('./embed'),
