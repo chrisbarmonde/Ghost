@@ -18,7 +18,7 @@ function getTitle(data, root, options = {}) {
 
     // If there's a specific meta title
     if (data.meta_title) {
-        title = data.meta_title;
+        title = data.meta_title + ' | ' + siteTitle;
     // Home title
     } else if (_.includes(context, 'home')) {
         if (options.property) {
@@ -28,19 +28,30 @@ function getTitle(data, root, options = {}) {
         }
     // Author title, paged
     } else if (_.includes(context, 'author') && data.author && _.includes(context, 'paged')) {
-        title = data.author.name + ' - ' + siteTitle + pageString;
+        title = data.author.name + ' | ' + siteTitle + pageString;
     // Author title, index
     } else if (_.includes(context, 'author') && data.author) {
-        title = data.author.name + ' - ' + siteTitle;
+        title = data.author.name + ' | ' + siteTitle;
     // Tag title, paged
     } else if (_.includes(context, 'tag') && data.tag && _.includes(context, 'paged')) {
-        title = data.tag.meta_title || data.tag.name + ' - ' + siteTitle + pageString;
+        title = data.tag.meta_title || data.tag.name + ' | ' + siteTitle + pageString;
     // Tag title, index
     } else if (_.includes(context, 'tag') && data.tag) {
-        title = data.tag.meta_title || data.tag.name + ' - ' + siteTitle;
+        title = data.tag.meta_title || data.tag.name + ' | ' + siteTitle;
     // Post title
     } else if (_.includes(context, 'post') && data.post) {
         title = data.post[optionsPropertyName] || data.post.meta_title || data.post.title;
+
+        if (data.post.tags) {
+            const isReview = data.post.tags.filter(function (tag) {
+                return tag.name === 'review';
+            }).length > 0;
+            if (isReview) {
+                title += ' review';
+            }
+        }
+
+        title += ' | ' + siteTitle;
     // Page title dependent on legacy object formatting (https://github.com/TryGhost/Ghost/issues/10042)
     } else if (_.includes(context, 'page') && data.post) {
         title = data.post[optionsPropertyName] || data.post.meta_title || data.post.title;
